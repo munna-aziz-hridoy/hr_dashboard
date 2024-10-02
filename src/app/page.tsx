@@ -35,7 +35,7 @@ export default function Home() {
     // Send the payload to your backend API using fetch
     try {
       const response = await fetch(
-        "http://localhost:5000/resume-upload/upload-multiple",
+        "https://resume-sorter.onrender.com/resume-upload/upload-multiple",
         {
           method: "POST",
           body: payload,

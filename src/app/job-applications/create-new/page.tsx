@@ -84,7 +84,7 @@ function CreateNew() {
 
     setSaving(true);
 
-    fetch("http://localhost:5000/job-posts/save", {
+    fetch("https://resume-sorter.onrender.com/job-posts/save", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
