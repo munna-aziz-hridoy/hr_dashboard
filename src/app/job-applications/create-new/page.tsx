@@ -52,7 +52,7 @@ function CreateNew() {
 
     setLoading(true);
 
-    fetch("http://localhost:5000/job-posts/create", {
+    fetch("https://resume-sorter.onrender.com/job-posts/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
