@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.section_title {
+  position: relative;
+}
+
+.section_title::after {
+  content: "";
+  position: absolute;
+  width: 10000px;
+  background: gray;
+  height: 1px;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
