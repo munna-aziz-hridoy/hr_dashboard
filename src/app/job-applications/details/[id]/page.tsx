@@ -1,31 +1,34 @@
 "use client";
 
 import React, { Fragment, useState } from "react";
-import { PrimaryButton } from "@/components/common/buttons"; // Assuming you have this button component
-import { FiUploadCloud } from "react-icons/fi";
+import { useParams } from "next/navigation";
+import { useJobPost } from "@/hooks";
+import { Spinner } from "@/components";
+import { marked } from "marked";
+import { PrimaryButton } from "@/components/common/buttons";
 import { Resume } from "@/types";
-import toast from "react-hot-toast";
+import { FiUploadCloud } from "react-icons/fi";
 import { getResumeRanking } from "@/api";
 
-export default function Home() {
-  const [job_descriptions, setJob_descriptions] = useState<string>("");
-  const [files, setFiles] = useState<FileList | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [resumes, setResumes] = useState<Resume[]>([]);
-  // Ensure the initial state is set to null
+function JobApplicationDetails() {
+  const { id } = useParams();
+  const { data, loading } = useJobPost(id as string);
 
-  // Function to handle the file upload and job description submission
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [resumes, setResumes] = useState<Resume[]>([]);
+
   function handleGetRanking() {
     // Check if files are available and job description is not empty
-    if (!files || !job_descriptions) {
-      toast.error("Please upload resumes and enter a job description.");
+    if (!files || !data?.job_description) {
+      alert("Please upload resumes and enter a job description.");
       return;
     }
-    setLoading(true);
+    setUploading(true);
 
     // Create a new FormData object to send with the request
     const payload = new FormData();
-    payload.append("job_description", job_descriptions);
+    payload.append("job_description", data.job_description);
 
     // Iterate through the files and append them to the payload
     for (let i = 0; i < files.length; i++) {
@@ -44,41 +47,39 @@ export default function Home() {
         console.log(err);
       })
       .finally(() => {
-        setLoading(false);
+        setUploading(false);
       });
   }
 
   return (
-    <main>
-      <div className="w-full h-screen p-5">
-        <h1 className="text-2xl font-semibold mb-5 text-gray-700">
-          Short List Resume
-        </h1>
+    <div>
+      {loading ? (
+        <div className="flex justify-center items-center p-5">
+          <Spinner />
+        </div>
+      ) : (
+        <div>
+          <p className="text-gray-700 font-semibold mb-4">
+            Created Date: {data?.createdAt?.split("T")[0]}
+          </p>
 
-        <div className="flex flex-col gap-10">
-          {/* Job Description Input Area */}
-          <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5">
-            <h2 className="text-xl font-semibold text-gray-700 mb-3">
-              Your Job Description Here
-            </h2>
-            <textarea
-              onChange={(e) => setJob_descriptions(e.target.value)}
-              className="w-full h-64 bg-white border border-gray-100 rounded outline-none focus:outline outline-1 outline-gray-200 p-4"
-              placeholder="Enter job description here..."
+          {data && (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: marked(data?.job_description as string),
+              }}
             />
-          </div>
+          )}
 
           {/* File Upload Area */}
-          {loading ? (
-            <div className="flex w-full justify-center items-center">
-              <p className="text-center text-lg font-semibold text-gray-600">
-                Loading....
-              </p>
+          {uploading ? (
+            <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative mt-5">
+              <Spinner />
             </div>
           ) : (
             <Fragment>
               {resumes?.length > 0 ? (
-                <div className="w-full">
+                <div className="w-full mt-5">
                   {/* Display the uploaded resumes */}
 
                   <table className="w-full text-left border-collapse">
@@ -124,7 +125,7 @@ export default function Home() {
                   </table>
                 </div>
               ) : (
-                <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative">
+                <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative mt-5">
                   <input
                     onChange={(e) => setFiles(e.target.files)}
                     multiple
@@ -146,11 +147,13 @@ export default function Home() {
           )}
 
           {/* Submit Button */}
-          <div>
+          <div className="mt-5">
             <PrimaryButton handleClick={handleGetRanking} text="Check" />
           </div>
         </div>
-      </div>
-    </main>
+      )}
+    </div>
   );
 }
+
+export default JobApplicationDetails;

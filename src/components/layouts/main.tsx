@@ -1,5 +1,6 @@
 import React from "react";
 import { Sidebar } from "@/components";
+import { Toaster } from "react-hot-toast";
 
 type Props = {
   children: React.ReactNode;
@@ -7,11 +8,17 @@ type Props = {
 
 function MainLayout({ children }: Props) {
   return (
-    <div className="flex w-full">
-      <aside className="w-[250px]">
+    <div className="flex w-full h-screen">
+      {/* Sidebar with sticky positioning */}
+      <aside className="w-[250px] h-screen sticky top-0">
         <Sidebar />
       </aside>
-      <main className="w-[calc(100%-250px)] p-5">{children}</main>
+
+      {/* Main content area */}
+      <main className="flex-1 p-5 overflow-y-auto">{children}</main>
+
+      {/* Toaster notifications */}
+      <Toaster />
     </div>
   );
 }
