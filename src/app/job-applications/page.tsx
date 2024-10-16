@@ -10,7 +10,7 @@ import Link from "next/link";
 import { BsEyeFill } from "react-icons/bs";
 
 type JobApplication = {
-  job_id: string;
+  id: string;
   role: string;
   company_name: string;
   type: string;
@@ -25,9 +25,9 @@ const columns: Array<{
   dataIndex: keyof JobApplication;
 }> = [
   {
-    key: "job_id",
+    key: "id",
     title: "ID",
-    dataIndex: "job_id",
+    dataIndex: "id",
   },
   {
     key: "role",
@@ -59,7 +59,7 @@ const columns: Array<{
 // Define the data with the correct type
 
 function JobApplications() {
-  const { loading, modifiedData, error } = useJobPosts();
+  const { loading, error, data } = useJobPosts();
 
   const actionComponent = (id: string) => {
     return (
@@ -92,14 +92,14 @@ function JobApplications() {
           <div className="flex justify-center items-center p-4">
             <Spinner />
           </div>
-        ) : error ? (
+        ) : !data && error ? (
           <div className="flex justify-center items-center p-4">
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
           <Table
             columns={columns}
-            data={modifiedData}
+            data={data}
             action
             actionComponent={actionComponent}
           />

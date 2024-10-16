@@ -2,17 +2,25 @@
 
 import React, { Fragment, useState } from "react";
 import { useParams } from "next/navigation";
-import { useJobPost } from "@/hooks";
+import { useCandidates, useJobPost } from "@/hooks";
 import { Spinner } from "@/components";
 import { marked } from "marked";
-import { PrimaryButton } from "@/components/common/buttons";
+
+// import { PrimaryButton } from "@/components/common/buttons";
+
 import { Resume } from "@/types";
-import { FiUploadCloud } from "react-icons/fi";
+
+// import { FiUploadCloud } from "react-icons/fi";
+
 import { getResumeRanking } from "@/api";
+import { BsEyeFill } from "react-icons/bs";
 
 function JobApplicationDetails() {
   const { id } = useParams();
   const { data, loading } = useJobPost(id as string);
+  const { data: candidates, loading: candidatesLoading } = useCandidates(
+    id as string
+  );
 
   const [files, setFiles] = useState<FileList | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -51,6 +59,8 @@ function JobApplicationDetails() {
       });
   }
 
+  console.log(setFiles, handleGetRanking, resumes);
+
   return (
     <div>
       {loading ? (
@@ -72,13 +82,13 @@ function JobApplicationDetails() {
           )}
 
           {/* File Upload Area */}
-          {uploading ? (
+          {uploading || candidatesLoading ? (
             <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative mt-5">
               <Spinner />
             </div>
           ) : (
             <Fragment>
-              {resumes?.length > 0 ? (
+              {candidates?.length > 0 ? (
                 <div className="w-full mt-5">
                   {/* Display the uploaded resumes */}
 
@@ -97,10 +107,13 @@ function JobApplicationDetails() {
                         <th className="py-2 px-4 text-sm font-semibold text-gray-600">
                           Rank
                         </th>
+                        <th className="py-2 px-4 text-sm font-semibold text-gray-600">
+                          Resume
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {resumes.map((resume, index) => (
+                      {candidates.map((resume, index) => (
                         <tr
                           key={index}
                           className={`hover:bg-gray-50 ${
@@ -111,13 +124,24 @@ function JobApplicationDetails() {
                             {resume.name}
                           </td>
                           <td className="py-3 px-4 text-sm text-gray-700">
-                            {resume.email}
+                            <a href={`mailto:${resume.email}`}>
+                              {resume.email}
+                            </a>
                           </td>
                           <td className="py-3 px-4 text-sm text-gray-700">
-                            {resume.phone}
+                            <a href={`tel:${resume.phone}`}>{resume.phone}</a>
                           </td>
                           <td className="py-3 px-4 text-sm text-gray-700">
                             {resume.rank}
+                          </td>
+                          <td className="py-3 px-4 text-sm text-gray-700">
+                            <a
+                              href={resume.resume_url}
+                              target="_blank"
+                              rel="noreferer"
+                            >
+                              <BsEyeFill className="text-xl cursor-pointer" />
+                            </a>
                           </td>
                         </tr>
                       ))}
@@ -125,31 +149,33 @@ function JobApplicationDetails() {
                   </table>
                 </div>
               ) : (
-                <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative mt-5">
-                  <input
-                    onChange={(e) => setFiles(e.target.files)}
-                    multiple
-                    type="file"
-                    className="w-full h-full flex justify-center items-center z-10 opacity-0 cursor-pointer"
-                  />
-                  <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex flex-col justify-center items-center">
-                    <FiUploadCloud className="text-5xl text-gray-300" />
-                    <p className="text-gray-500">Upload resumes</p>
-                    {files && files.length > 0 && (
-                      <p className="text-gray-700 mt-2">
-                        {files.length} file(s) selected
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <div />
+
+                // <div className="w-full h-96 bg-gray-50 shadow-md rounded p-5 flex justify-center items-center relative mt-5">
+                //   <input
+                //     onChange={(e) => setFiles(e.target.files)}
+                //     multiple
+                //     type="file"
+                //     className="w-full h-full flex justify-center items-center z-10 opacity-0 cursor-pointer"
+                //   />
+                //   <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex flex-col justify-center items-center">
+                //     <FiUploadCloud className="text-5xl text-gray-300" />
+                //     <p className="text-gray-500">Upload resumes</p>
+                //     {files && files.length > 0 && (
+                //       <p className="text-gray-700 mt-2">
+                //         {files.length} file(s) selected
+                //       </p>
+                //     )}
+                //   </div>
+                // </div>
               )}
             </Fragment>
           )}
 
           {/* Submit Button */}
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <PrimaryButton handleClick={handleGetRanking} text="Check" />
-          </div>
+          </div> */}
         </div>
       )}
     </div>

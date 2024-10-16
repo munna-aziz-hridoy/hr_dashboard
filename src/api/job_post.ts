@@ -56,13 +56,10 @@ export async function saveJobPost(payload: Save_Job_Post) {
 }
 
 export async function getResumeRanking(payload: FormData) {
-  const response = await fetch(
-    "https://resume-sorter.onrender.com/resume-upload/upload-multiple",
-    {
-      method: "POST",
-      body: payload,
-    }
-  );
+  const response = await fetch(`${api_url}/resume-upload/upload-multiple`, {
+    method: "POST",
+    body: payload,
+  });
   if (!response.ok) {
     throw new Error("Failed to get resume ranking");
   }

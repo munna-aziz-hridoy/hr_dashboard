@@ -1,3 +1,4 @@
+import { getCandidates } from "./candidates";
 import {
   getAllJobPosts,
   createJobPost,
@@ -5,4 +6,10 @@ import {
   getResumeRanking,
 } from "./job_post";
 
-export { getAllJobPosts, createJobPost, getJobPostById, getResumeRanking };
+export {
+  getAllJobPosts,
+  createJobPost,
+  getJobPostById,
+  getResumeRanking,
+  getCandidates,
+};

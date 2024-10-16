@@ -81,3 +81,17 @@ export type JobFormData = {
   note: string;
   user_id: string;
 };
+
+export type Candidates = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  rank: number;
+  resume_url: string;
+  education: string;
+  university: string;
+  job_experience: string;
+  previous_company: string[];
+  job_post_id: number;
+};
