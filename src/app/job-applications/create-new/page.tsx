@@ -19,6 +19,7 @@ function CreateNew() {
     salary: "",
     type: "",
     note: "",
+    nature: "",
   });
 
   const [loading, setLoading] = useState(false);

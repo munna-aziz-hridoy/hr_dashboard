@@ -9,6 +9,7 @@ export type Job_Post = {
   salary: string;
   type: string;
   note: string;
+  nature: string;
 };
 
 export type Job_Post_Payload = {
@@ -24,6 +25,7 @@ export type Job_Post_Payload = {
   note: string;
   status: string;
   user_id: string;
+  nature: string;
 };
 
 export type Job_Post_Data = {

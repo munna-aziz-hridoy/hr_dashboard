@@ -33,7 +33,7 @@ function CreateJobForm({ handleSubmit, data, setData }: Props) {
         />
       </div>
       <div className="mt-5 flex gap-4">
-        <div className="w-2/3">
+        <div className="w-full">
           <label htmlFor="title" className="text-sm text-gray-500 font-light">
             Role
           </label>
@@ -45,7 +45,10 @@ function CreateJobForm({ handleSubmit, data, setData }: Props) {
             placeholder="Job role goes here.."
           />
         </div>
-        <div className="w-1/3">
+      </div>
+
+      <div className="mt-5 flex gap-4">
+        <div className="w-1/2">
           <label htmlFor="title" className="text-sm text-gray-500 font-light">
             Type
           </label>
@@ -60,6 +63,23 @@ function CreateJobForm({ handleSubmit, data, setData }: Props) {
             <option value="on-site">On Site</option>
             <option value="remote">Remote</option>
             <option value="hybrid">Hybrid</option>
+          </select>
+        </div>
+
+        <div className="w-1/2">
+          <label htmlFor="title" className="text-sm text-gray-500 font-light">
+            Nature
+          </label>
+          <select
+            value={data.nature}
+            onChange={(e) => setData({ ...data, nature: e.target.value })}
+            className="w-full block p-2 mt-1 rounded bg-transparent border border-gray-200 focus:outline outline-1 outline-gray-300 text-sm text-gray-500"
+          >
+            <option value="" selected disabled>
+              Select an option
+            </option>
+            <option value="full-time">Full Time</option>
+            <option value="part-time">Part Time</option>
           </select>
         </div>
       </div>
@@ -398,6 +418,7 @@ function CreateJobForm({ handleSubmit, data, setData }: Props) {
               qualifications: data.qualifications.join(", "),
               status: "Proccecing",
               user_id: "user_001",
+              nature: data.nature,
             })
           }
           text="Submit"
