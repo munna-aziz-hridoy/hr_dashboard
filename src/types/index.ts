@@ -59,6 +59,7 @@ export type Save_Job_Post = {
   job_description: string;
   status: string;
   user_id: string;
+  nature: string;
 };
 
 export type Resume = {
